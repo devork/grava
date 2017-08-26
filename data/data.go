@@ -584,7 +584,7 @@ func read(db *pgx.ConnPool, prefix, layer, schema string) (*Layer, error) {
 			table_schema = $1 and table_name = $2 
 		order by 
 			ordinal_position asc
-		`, schema, layer,
+		`, schema, prefix+layer,
 	)
 
 	if err != nil {
