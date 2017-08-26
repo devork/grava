@@ -223,10 +223,8 @@ var opmplc = {
                 "text-field": "{htmlname}",
                 "text-keep-upright": true,
                 "text-font": ["OpenSansSemiBold"],
-                //"text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-                //"text-font": ["OS VectorMap District Regular"],
                 "text-size": 11,
-                //"text-transform": "uppercase",
+                "text-transform": "uppercase",
                 "text-letter-spacing": 0.05
             },
             "paint": {
@@ -243,7 +241,9 @@ var map = new mapboxgl.Map({
     // os HQ
     center: [-1.470620,50.938032]
 });
-map.showTileBoundaries =true;
+
+// enable this for some debug
+map.showTileBoundaries = false;
 
 map.addControl(new mapboxgl.Navigation());
 

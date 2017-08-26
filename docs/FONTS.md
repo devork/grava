@@ -1,8 +1,8 @@
-# Font Import
+# Font Setup
 
 Use the mapbox `node-fontnik`. 
 
-To install:
+To install (example below is for OpenSans Semibold which is used in the OS demo):
 
     brew install boost --c++11 freetype protobuf --c++11
     git clone https://github.com/mapbox/node-fontnik.git    
