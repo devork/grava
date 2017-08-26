@@ -1,5 +1,5 @@
 {
-    "fontsDir": ".",
+    "fontsDir": "../../fonts",
     "postgres": "postgresql://mvt_user:9Ep7XgAMDZnYW6V@127.0.0.1/mvt?sslmode=disable",
     "schema": "grava",
     "sources": [

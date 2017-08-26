@@ -54,26 +54,7 @@ func main() {
 	cors := flag.Bool("with-cors", false, "enable or disable CORS on requests (turn off when behind HAProxy for example)")
 	flag.Parse()
 
-	if path == nil || *path == "" {
-		log.Error("no path to configuration specified")
-		os.Exit(1)
-	}
-
-	p, err := filepath.Abs(*path)
-
-	if err != nil {
-		log.Errorf("failed to resolve path: error = %s", err)
-		os.Exit(1)
-	}
-
-	file, err := os.Open(p)
-
-	if err != nil {
-		log.Errorf("failed to open config path: path = %s, error = %s", *path, err)
-		os.Exit(1)
-	}
-
-	cfg, err := config.New(file)
+	cfg, err := config.New(*path)
 
 	if err != nil {
 		log.Errorf("failed to decode configuration: error = %s", err)
