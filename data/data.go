@@ -165,7 +165,7 @@ func (d *Db) readLayer(lyr *Layer, box *geo.BBox, width, height float64) (*vtile
 			}
 
 			if value == nil {
-				log.Warn("found nil value: position = %d, column = %s", idx, desc[idx].Name)
+				log.Debugf("found nil value: position = %d, column = %s", idx, desc[idx].Name)
 				continue
 			}
 

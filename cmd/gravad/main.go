@@ -51,6 +51,7 @@ func main() {
 	// configure available layers etc
 	path := flag.String("config", "", "path to `config` file")
 	port := flag.Int("port", 8080, "`port` on which the service will listen")
+	cors := flag.Bool("with-cors", false, "enable or disable CORS on requests (turn off when behind HAProxy for example)")
 	flag.Parse()
 
 	if path == nil || *path == "" {
@@ -96,7 +97,6 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/status", web.NewStatusHandler("gravad-service"))
-
 	router.HandleFunc("/{name:[A-Za-z0-9_]+}/{z:[0-9]+}/{x:[0-9]+}/{y:[0-9]+}/tile.mvt", web.NewErrorHandler(NewMVTHandler(db)))
 	router.HandleFunc("/fonts/{font}/{file}", web.NewErrorHandler(FontHandler))
 
@@ -104,7 +104,14 @@ func main() {
 
 	log.Infof("starting server: build = %s, date = %s, config = %v", sha, date, cfg)
 
-	s, err := web.NewServer(web.NewRequestHandler("auth-service", router), *port)
+	var s *web.Server
+
+	if *cors {
+		s, err = web.NewServer(web.NewCorsHandler(web.NewRequestHandler("auth-service", router)), *port)
+	} else {
+		s, err = web.NewServer(web.NewRequestHandler("auth-service", router), *port)
+	}
+
 	if err != nil {
 		log.Errorf("failed to create server: error = %s", err)
 		os.Exit(1)
@@ -209,6 +216,6 @@ func NewMVTHandler(db *data.Db) web.Handler {
 
 // NotFounderHandler provides extra logging when no route matches
 func NotFounderHandler(w http.ResponseWriter, r *http.Request) {
-	log.Warn("cannot find handler for route", "route", r.RequestURI)
+	log.Warnf("cannot find handler for route: route = %s", r.RequestURI)
 	w.WriteHeader(http.StatusNotFound)
 }

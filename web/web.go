@@ -61,8 +61,10 @@ func NewErrorHandler(h Handler) http.HandlerFunc {
 	}
 }
 
-func NewCorsHandler(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+// NewCorsHandler wraps a given handler func with CORS stuff
+// TODO - this is really basic and needs tidying up to be properly CORS
+func NewCorsHandler(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Access-Control-Allow-Credentials", "true")
 		w.Header().Add("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, Origin, User-Agent, Cache-Control, Keep-Alive, If-Modified-Since, If-None-Match")
 		w.Header().Add("Access-Control-Allow-Methods", "GET, HEAD")
@@ -77,7 +79,7 @@ func NewCorsHandler(h http.HandlerFunc) http.HandlerFunc {
 		}
 
 		h.ServeHTTP(w, r)
-	}
+	})
 }
 
 // NewStatusHandler creates a service specific handler that can be used for server updates required by HAProxy.

@@ -4,7 +4,7 @@
 #
 # https://www.ordnancesurvey.co.uk/business-and-government/products/os-open-map-local.html
 #
-# When run, this script will import the SU shapefiles. It is designed to overwrite the existing tables. Use this script to 
+# When run, this script will import shapefiles from the shp directory. It is designed to overwrite the existing tables. Use this script to 
 # design your own import scripts.
 # 
 
