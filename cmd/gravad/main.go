@@ -155,7 +155,6 @@ func NewMVTHandler(db *data.Db) web.Handler {
 	return func(w http.ResponseWriter, r *http.Request) *web.Error {
 
 		vars := mux.Vars(r)
-		log.Info("handling request", "layer", vars["layer"], "x", vars["x"], "y", vars["y"], "z", vars["z"])
 		x, _ := strconv.Atoi(vars["x"])
 		y, _ := strconv.Atoi(vars["y"])
 		z, _ := strconv.Atoi(vars["z"])
