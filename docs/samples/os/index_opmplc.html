@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='mapbox-gl-js/v0.24.0/mapbox-gl.js'></script>
+    <link href='mapbox-gl-js/v0.24.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+<script>
+var opmplc = {
+    "version": 8,
+    "glyphs": "http://localhost:8080/fonts/{fontstack}/{range}.pbf",
+    "sources": {        
+        "opmplc": {
+            "type": "vector",
+            "tiles": ["http://localhost:8080/opmplc/{z}/{x}/{y}/tile.mvt"]
+        }
+    },
+    "layers": [
+        {
+            "id": "background",
+            "type": "background",
+            "paint": {
+                "background-color": "white"
+            }
+        }, {
+            "id": "woodland",
+            "type": "fill",
+            "source": "opmplc",
+            "source-layer": "woodland",
+            "paint": {
+                "fill-color": "rgb(209,240,206)"
+            }
+        }, {
+            "id": "tidalwater",
+            "type": "fill",
+            "source": "opmplc",
+            "source-layer": "tidalwater",
+            "paint": {
+                "fill-color": "rgb(213,244,248)"
+            }
+        }, {
+            "id": "surfacewater_area",
+            "type": "fill",
+            "source": "opmplc",
+            "source-layer": "surfacewater_area",
+            "paint": {
+                "fill-color": "rgb(213,244,248)"
+            }
+        }, {
+            "id": "foreshore",
+            "type": "fill",
+            "source": "opmplc",
+            "source-layer": "foreshore",
+            "paint": {
+                "fill-color": "rgb(230,235,228)"
+            }
+        }, {
+            "id": "glasshouse",
+            "type": "fill",
+            "source": "opmplc",
+            "source-layer": "foreshore",
+            "paint": {
+                "fill-color": "rgb(255,255,255)",
+                "fill-outline-color": "rgb(121,159,121)"
+            }
+        }, {
+            "id": "building",
+            "type": "fill",
+            "source": "opmplc",
+            "source-layer": "building",
+            "paint": {
+                "fill-color": "rgb(254,222,183)",
+                "fill-outline-color": "rgb(72,64,60)"
+            }
+        }, {
+            "id": "importantbuilding",
+            "type": "fill",
+            "source": "opmplc",
+            "source-layer": "importantbuilding",
+            "paint": {
+                "fill-color": "rgb(254,222,183)",
+                "fill-outline-color": "rgb(72,64,60)"
+            }
+        }, {
+            "id": "roadtunnel",
+            "type": "line",
+            "source": "opmplc",
+            "source-layer": "roadtunnel",
+            "layout":{
+                "line-cap": "square",
+                "line-join": "bevel"
+            },
+            "paint": {
+                "line-color": "rgb(80,80,80)",
+                "line-width": 1.5,
+                "line-dasharray": [5,5]
+            }
+        }, {
+            "id": "roadcase",
+            "type": "line",
+            "source": "opmplc",
+            "source-layer": "road",
+            "layout":{
+                "line-cap": "round",
+                "line-join": "round"
+            },
+            "paint": {
+                "line-color": "rgb(80,80,80)",
+                "line-width": 8,
+            }
+        }, {
+            "id": "roundaboutcase",
+            "type": "circle",
+            "source": "opmplc",
+            "source-layer": "roundabout",
+            "paint": {
+                "circle-radius": 5,
+                "circle-color": "rgb(80,80,80)"
+            }
+        }, {
+            "id": "roadfill",
+            "type": "line",
+            "source": "opmplc",
+            "source-layer": "road",
+            "filter": ["!in", "classifica", "Motorway", "Motorway, Collapsed Dual Carriageway"],
+            "layout":{
+                "line-cap": "round",
+                "line-join": "round"
+            },
+            "paint": {
+                "line-color": "rgb(241,235,196)",
+                "line-width": 6,
+            }
+        },
+        {
+            //classifica
+            "id": "motorway-casing",
+            "type": "line",
+            "source": "opmplc",
+            "source-layer": "road",
+            "filter": ["in", "classifica", "Motorway", "Motorway, Collapsed Dual Carriageway"],
+            "layout":{
+                "line-cap": "round",
+                "line-join": "round"
+            },
+            "paint": {
+                "line-color": "rgb(54,177,201)",
+                "line-width": 8,
+            }
+        },
+        {
+            //classifica
+            "id": "motorway",
+            "type": "line",
+            "source": "opmplc",
+            "source-layer": "road",
+            "filter": ["in", "classifica", "Motorway", "Motorway, Collapsed Dual Carriageway"],
+            "layout":{
+                "line-cap": "round",
+                "line-join": "round"
+            },
+            "paint": {
+                "line-color": "rgb(0,159,184)",
+                "line-width": 6,
+            }
+        },
+        {
+            "id": "railwaytrack",
+            "type": "line",
+            "source": "opmplc",
+            "source-layer": "railwaytrack",
+            "layout":{
+                "line-cap": "square",
+                "line-join": "bevel"
+            },
+            "paint": {
+                "line-color": "rgb(100,100,100)",
+                "line-width": 2,
+                "line-dasharray": [5,2]
+            }
+        }, {
+            "id": "railwaystation_outline",
+            "type": "circle",
+            "source": "opmplc",
+            "source-layer": "railwaystation",
+            "paint": {
+                "circle-radius": 5,
+                "circle-color": "rgb(80,80,80)"
+            }
+        }, {
+            "id": "railwaystation",
+            "type": "circle",
+            "source": "opmplc",
+            "source-layer": "railwaystation",
+            "paint": {
+                "circle-radius": 3,
+                "circle-color": "rgb(243,243,0)"
+            }
+        }, {
+            "id": "namedplace",
+            "type": "circle",
+            "source": "opmplc",
+            "source-layer": "namedplace",
+            "paint": {
+                "circle-radius": 3,
+                "circle-color": "#83aec4"
+            }
+        }, {
+            "id": "namedplace_text",
+            "type": "symbol",
+            "source": "opmplc",
+            "source-layer": "namedplace",
+            "layout":{
+                "text-field": "{htmlname}",
+                "text-keep-upright": true,
+                "text-font": ["OpenSansSemiBold"],
+                //"text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+                //"text-font": ["OS VectorMap District Regular"],
+                "text-size": 11,
+                //"text-transform": "uppercase",
+                "text-letter-spacing": 0.05
+            },
+            "paint": {
+                "text-color": "#000000"
+            }
+        }
+    ]
+};
+
+// var map = new mapboxgl.Map({
+//     container: 'map',
+//     style: simple,
+//     zoom: 1,
+//     center: [-14, 35]
+// });
+var map = new mapboxgl.Map({
+    container: 'map',
+    //style: 'mapbox://styles/mapbox/streets-v8',
+    style: opmplc,
+    zoom: 15,
+    // os HQ
+    center: [-1.470620,50.938032]
+});
+map.showTileBoundaries =true;
+
+map.addControl(new mapboxgl.Navigation());
+
+map.on('click', function (e) {
+    var features = map.queryRenderedFeatures(e.point);
+    console.log(JSON.stringify(features, null, 2));
+});
+</script>
+
+</body>
+</html>

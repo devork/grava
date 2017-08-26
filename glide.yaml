@@ -1,0 +1,17 @@
+package: github.com/devork/grava
+import:
+- package: github.com/devork/geom
+  subpackages:
+  - ewkb
+  - geojson
+- package: github.com/golang/protobuf
+  subpackages:
+  - proto
+- package: github.com/gorilla/mux
+  version: ^1.4.0
+- package: github.com/jackc/pgx
+  version: ^3.0.1
+- package: gopkg.in/inconshreveable/log15.v2
+  version: ^2.11.0
+- package: github.com/sirupsen/logrus
+  version: ^1.0.3
