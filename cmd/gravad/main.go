@@ -51,8 +51,13 @@ func main() {
 	// configure available layers etc
 	path := flag.String("config", "", "path to `config` file")
 	port := flag.Int("port", 8080, "`port` on which the service will listen")
-	cors := flag.Bool("with-cors", false, "enable or disable CORS on requests (turn off when behind HAProxy for example)")
+	cors := flag.Bool("cors", false, "enable CORS on requests (turn off when behind HAProxy for example)")
+	jsonLogging := flag.Bool("json-logging", false, "enable JSON logging output")
 	flag.Parse()
+
+	if *jsonLogging {
+		log.SetFormatter(&log.JSONFormatter{})
+	}
 
 	cfg, err := config.New(*path)
 

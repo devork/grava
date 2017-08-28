@@ -67,7 +67,7 @@ func NewCorsHandler(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Access-Control-Allow-Credentials", "true")
 		w.Header().Add("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, Origin, User-Agent, Cache-Control, Keep-Alive, If-Modified-Since, If-None-Match")
-		w.Header().Add("Access-Control-Allow-Methods", "GET, HEAD")
+		w.Header().Add("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
 		w.Header().Add("Access-Control-Expose-Headers", "Content-Type, Cache-Control, ETag, Expires, Last-Modified, Content-Length")
 		w.Header().Add("Access-Control-Max-Age", "3600")
