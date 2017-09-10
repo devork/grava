@@ -84,7 +84,7 @@ func (d *Db) FetchTile(box *geo.BBox, name string) (*vtile.Tile, error) {
 func (d *Db) readLayer(lyr *Layer, box *geo.BBox, width, height float64) (*vtile.Tile_Layer, error) {
 	bx := (box.Maxx - box.Minx) * 0.05
 	by := (box.Maxy - box.Miny) * 0.05
-	log.Debug("Reading Layer: bbox = %s, name = %s, bx = %f, by = %f", box.GoString(), lyr.Name, bx, by)
+	log.Debugf("Reading Layer: bbox = %s, name = %s, bx = %f, by = %f", box.GoString(), lyr.Name, bx, by)
 	rows, err := d.db.Query(
 		lyr.Query,
 		box.Minx-bx, box.Miny-by, box.Maxx+bx, box.Maxy+by, box.Srid,
@@ -165,7 +165,6 @@ func (d *Db) readLayer(lyr *Layer, box *geo.BBox, width, height float64) (*vtile
 			}
 
 			if value == nil {
-				log.Debugf("found nil value: position = %d, column = %s", idx, desc[idx].Name)
 				continue
 			}
 
