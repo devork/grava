@@ -1,5 +1,5 @@
-hash: 07545ff609fc5e62a35238dccf125dd7457e774466719e48e4284cfed7da1f8f
-updated: 2017-08-25T10:47:39.915737547+01:00
+hash: 758bfec2e2921730452bfaca4ad352726a068f8a9d605c7cd2c0e68e4df2cbc7
+updated: 2017-09-10T13:21:25.197723774+01:00
 imports:
 - name: github.com/devork/geom
   version: 7e9f66b289508347391c994b66071dbab3811145
@@ -22,14 +22,15 @@ imports:
   - pgio
   - pgproto3
   - pgtype
-- name: github.com/mattn/go-colorable
-  version: 941b50ebc6efddf4c41c8e4537a5f68a4e686b24
-- name: github.com/mattn/go-isatty
-  version: fc9e8d8ef48496124e79ae0df75490096eccf6fe
 - name: github.com/pkg/errors
   version: c605e284fe17294bda444b34710735b29d1a9d90
 - name: github.com/sirupsen/logrus
   version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
+- name: github.com/stretchr/testify
+  version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
+  subpackages:
+  - assert
+  - require
 - name: golang.org/x/crypto
   version: eb71ad9bd329b5ac0fd0148dd99bd62e8be8e035
   subpackages:
@@ -41,7 +42,12 @@ imports:
   - windows
 - name: gopkg.in/inconshreveable/log15.v2
   version: b105bd37f74e5d9dc7b6ad7806715c7a2b83fd3f
+testImports:
+- name: github.com/davecgh/go-spew
+  version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
   subpackages:
-  - stack
-  - term
-testImports: []
+  - spew
+- name: github.com/pmezard/go-difflib
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
+  subpackages:
+  - difflib

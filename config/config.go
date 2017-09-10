@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"bitbucket.org/devork/kjore/log"
+	log "github.com/sirupsen/logrus"
 )
 
 // Config is the parsed configuration file
@@ -22,11 +22,32 @@ import (
 // "postgres": "postgresql://user:password@/mvt"
 //
 type Config struct {
+	Server   Server   `json:"server"`
+	Cache    Cache    `json:"cache"`
+	Logging  Logging  `json:"logging"`
 	Postgres string   `json:"postgres"`
 	Schema   string   `json:"schema"`
 	Sources  []Source `json:"sources"`
 	FontsDir string   `json:"fontsDir"`
 	Path     string   `json:"-"`
+}
+
+// Logging holds the logging setup for the server
+type Logging struct {
+	JSON  bool   `json:"json"`
+	Level string `json:"level"`
+}
+
+// Server holds the web server configuration
+type Server struct {
+	Port int  `json:"port"`
+	CORS bool `json:"cors"`
+}
+
+// Cache holds tile cache configuration
+type Cache struct {
+	Type  string `json:"type"`
+	Limit int    `json:"limit"`
 }
 
 // Source configures a set of layers to be displayed in a vector map. A source is composed of a name (which must be unique in the set of

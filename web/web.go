@@ -69,7 +69,7 @@ func NewCorsHandler(h http.Handler) http.Handler {
 		w.Header().Add("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, Origin, User-Agent, Cache-Control, Keep-Alive, If-Modified-Since, If-None-Match")
 		w.Header().Add("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS")
 		w.Header().Add("Access-Control-Allow-Origin", "*")
-		w.Header().Add("Access-Control-Expose-Headers", "Content-Type, Cache-Control, ETag, Expires, Last-Modified, Content-Length")
+		w.Header().Add("Access-Control-Expose-Headers", "Content-Type, Cache-Control, ETag, Expires, Last-Modified, Content-Length, X-Clacks-Overhead")
 		w.Header().Add("Access-Control-Max-Age", "3600")
 
 		// preflight check
@@ -100,6 +100,14 @@ func NewStatusHandler(serviceID string) http.HandlerFunc {
 		}
 	}
 
+}
+
+// NewClacksHandler - say no more
+func NewClacksHandler(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Clacks-Overhead", "GNU Terry Pratchett")
+		h.ServeHTTP(w, r)
+	})
 }
 
 // NewRequestHandler wraps a handler func to provide standard request logging and setup

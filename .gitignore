@@ -2,3 +2,4 @@ vendor
 cmd/gravad/gravad
 docs/samples/os/opmplc/gml
 docs/samples/os/opmplc/shp
+.vscode
