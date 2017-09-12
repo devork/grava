@@ -22,4 +22,4 @@ ADD docker/bin/*  /usr/local/bin/
 
 EXPOSE 8080
 
-CMD ["/usr/local/bin/gravad", "--config", "/etc/gravad/config.json"]
+CMD ["/usr/local/bin/run-gravad.sh"]

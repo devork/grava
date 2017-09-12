@@ -23,7 +23,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// build flags
 var (
 	sha     string
 	date    string
@@ -36,12 +35,6 @@ var (
 	fontsDir  = ""
 )
 
-var (
-	rprof interface {
-		Stop()
-	}
-)
-
 func main() {
 
 	flag.Usage = func() {
@@ -50,7 +43,6 @@ func main() {
 		flag.PrintDefaults()
 	}
 
-	// configure available layers etc
 	path := flag.String("config", "", "path to `config` file")
 	flag.Parse()
 
