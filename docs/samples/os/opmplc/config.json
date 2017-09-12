@@ -1,0 +1,37 @@
+{
+    "logging": {
+        "json": true,
+        "level": "debug"
+    },
+    "server": {
+        "port": 8080,
+        "cors": true
+    },
+    "cache": {
+        "type": "memory",
+        "limit": 10000
+    },
+    "fontsDir": "../../fonts",
+    "postgres": "postgresql://mvt_user:9Ep7XgAMDZnYW6V@127.0.0.1/mvt?sslmode=disable",
+    "schema": "grava",
+    "sources": [
+        {
+            "prefix": "opmplc_",
+            "name": "opmplc",
+            "layers":[
+                "woodland",
+                "tidalwater",
+                "surfacewater_area",
+                "glasshouse",
+                "building",
+                "importantbuilding",
+        		"roadtunnel",
+                "road",
+                "roundabout",
+                "railwaytrack",
+                "railwaystation",
+                "namedplace"
+            ]
+        }
+    ]
+}
