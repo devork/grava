@@ -13,6 +13,7 @@ build:
 	go clean
 	go build -ldflags ${LDFLAGS} -o gravad
 
-buildlin:
+dockerlin:
 	go clean
-	GOOS=linux GOARCH=amd64 go build -ldflags ${LDFLAGS} -o gravad
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags ${LDFLAGS} -o gravad
+	docker build -t gravad:latest -f dockerfile .
