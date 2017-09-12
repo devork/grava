@@ -110,7 +110,7 @@ func main() {
 
 	router.NotFoundHandler = http.HandlerFunc(NotFounderHandler)
 
-	log.Infof("starting server: build = %s, date = %s, config = %v", sha, date, cfg)
+	log.Infof("starting server: version = %s, build = %s, date = %s, config = %v", version, sha, date, cfg)
 
 	var s *web.Server
 
