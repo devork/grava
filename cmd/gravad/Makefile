@@ -1,7 +1,7 @@
 # The folder of the make file
 ROOT := $(patsubst %/,%,$(dir $(realpath $(lastword $(MAKEFILE_LIST)))))
-GOOS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
-LDFLAGS := "-X main.sha=`git log -1 --pretty=format:%H` -X main.date=`date -u +%Y%m%d%H%M%S` -X main.version=1.0.0"
+VERSION := $(shell cat ${ROOT}/../../VERSION)
+LDFLAGS := "-X main.sha=`git log -1 --pretty=format:%H` -X main.date=`date -u +%Y%m%d%H%M%S` -X main.version=${VERSION}"
 
 clean:
 	go clean
