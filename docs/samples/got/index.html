@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='../../mapbox-gl-js/v0.44.0/mapbox-gl.js'></script>
+    <link href='../../mapbox-gl-js/v0.44.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+<script>
+var opmplc = {
+    "version": 8,
+    "sprite": "http://localhost:8081/got/got",
+    "glyphs": "http://localhost:8080/fonts/{fontstack}/{range}.pbf",
+    "sources": {        
+        "got": {
+            "type": "vector",
+            "tiles": ["http://localhost:8080/got/{z}/{x}/{y}/tile.mvt"]
+        }
+    },
+    "layers": [
+        {
+            "id": "background",
+            "type": "background",
+            "paint": {
+                "background-color": "rgb(153,182,175)"
+            }
+        }, {
+            "id": "land",
+            "type": "fill",
+            "source": "got",
+            "source-layer": "land",
+            "paint": {
+                "fill-color": "rgb(126,152,102)",
+                "fill-outline-color": "rgb(168,192,184)"
+            }
+        }, {
+            "id": "islands",
+            "type": "fill",
+            "source": "got",
+            "source-layer": "islands",
+            "paint": {
+                "fill-color": "rgb(126,152,102)",
+                "fill-outline-color": "rgb(168,192,184)"
+            }
+        }, {
+            "id": "winter-area",
+            "type": "fill",
+            "source": "got",
+            "source-layer": "political",
+            "filter": ["==", "ogc_fid", 3],
+            "paint": {
+                "fill-color": "white"
+            }
+        }, 
+        // {
+        //     "id": "landscape-mountain",
+        //     "type": "fill",
+        //     "source": "got",
+        //     "source-layer": "landscape",
+        //     "filter": ["==", "type", "mountain"],
+        //     "paint": {
+        //         "fill-pattern": "mountain"                
+        //     }
+        // },{
+        //     "id": "landscape-forest",
+        //     "type": "fill",
+        //     "source": "got",
+        //     "source-layer": "landscape",
+        //     "filter": ["==", "type", "forest"],
+        //     "paint": {
+        //         "fill-pattern": "forest"                
+        //     }
+        // }, 
+        {
+            "id": "rivers",
+            "type": "line",
+            "source": "got",
+            "source-layer": "rivers",
+            "layout":{
+                "line-cap": "round",
+                "line-join": "round"
+            },
+            "paint": {
+                "line-color": "rgb(153,182,175)",
+                "line-width": 2,
+            }
+        }, {
+            "id": "lakes",
+            "type": "fill",
+            "source": "got",
+            "source-layer": "lakes",
+            "paint": {
+                "fill-color": "rgb(153,182,175)"
+            }
+        }, {
+            "id": "political-boundaries",
+            "type": "line",
+            "source": "got",
+            "source-layer": "political",
+            "layout":{
+                "line-cap": "round",
+                "line-join": "round",
+                
+            },
+            "paint": {
+                "line-color": "rgb(65,79,86)",
+                "line-width": 1,
+                "line-dasharray":  [10, 5]
+            }
+        }, {
+            "id": "roadcase",
+            "type": "line",
+            "source": "got",
+            "source-layer": "roads",
+            "layout":{
+                "line-cap": "round",
+                "line-join": "round"
+            },
+            "paint": {
+                "line-color": "rgb(80,80,80)",
+                "line-width": 4,
+            }
+        }, {
+            "id": "roadfill",
+            "type": "line",
+            "source": "got",
+            "source-layer": "roads",
+            "layout":{
+                "line-cap": "round",
+                "line-join": "round"
+            },
+            "paint": {
+                "line-color": "rgb(153,182,175)",
+                "line-width": 2,
+            }
+        }, {
+            "id": "political-names",
+            "type": "symbol",
+            "source": "got",
+            "source-layer": "political_point",
+            "layout":{
+                "text-field": "{name}",
+                "text-keep-upright": true,
+                "text-font": ["OpenSansSemiBold"],
+                "text-size": 16,
+                "text-letter-spacing": 0.05
+            },
+            "paint": {
+                "text-color": "rgb(71,72,73)",
+                "text-halo-color": "rgb(168,192,184)",
+                "text-halo-width": 1
+            }
+        }, {
+            "id": "locations-points",
+            "type": "circle",
+            "source": "got",
+            "source-layer": "locations",
+            "filter": ["in", "type", "City", "Town"],            
+            "paint": {
+                "circle-color": "rgb(71,72,73)",
+                "circle-radius":3
+            }
+        }, {
+            "id": "locations",
+            "type": "symbol",
+            "source": "got",
+            "source-layer": "locations",
+            "filter": ["in", "type", "City", "Town"],
+            "layout":{
+                "text-anchor": "left",
+                "text-field": "{name}",
+                "text-keep-upright": true,
+                "text-font": ["OpenSansSemiBold"],
+                "text-size": 12,
+                "text-letter-spacing": 0.05,
+                "text-offset": [0.5,0]
+            },
+            "paint": {
+                "text-color": "rgb(71,72,73)",
+                "text-halo-color": "rgb(168,192,184)",
+                "text-halo-width": 1
+            }
+        }, {
+            "id": "locations-other-points",                        
+            "type": "circle",
+            "source": "got",
+            "source-layer": "locations",
+            "filter": ["!in", "type", "City", "Town"],                      
+            "paint": {
+                "circle-color": "rgb(71,72,73)",
+                "circle-radius":2,
+                "circle-opacity": {
+                    "stops":[
+                        [5.9, 0],
+                        [6, 1]
+                    ]
+                }
+            }
+        }, {
+            "id": "locations-other",            
+            "type": "symbol",
+            "source": "got",
+            "source-layer": "locations",
+            "filter": ["!in", "type", "City", "Town"],
+            "layout":{                
+                "text-anchor": "left",
+                "text-field": "{name}",
+                "text-keep-upright": true,
+                "text-font": ["OpenSansSemiBold"],
+                "text-size": 10,
+                "text-letter-spacing": 0.05,
+                "text-offset": [0.5,0]
+            },
+            "paint": {
+                "text-opacity": {
+                    "stops":[
+                        [5.9, 0],
+                        [6, 1]
+                    ]
+                },
+                "text-color": "rgb(71,72,73)",
+                "text-halo-color": "rgb(168,192,184)",
+                "text-halo-width": 1
+            }
+        }
+    ]
+};
+
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: opmplc,
+    zoom: 5,
+    // os HQ
+    center: [21.4, 3]
+});
+
+// enable this for some debug
+map.showTileBoundaries = true;
+
+//map.addControl(new mapboxgl.Navigation());
+
+map.on('click', function (e) {
+    var features = map.queryRenderedFeatures(e.point);
+    console.log(JSON.stringify(features, null, 2));
+});
+</script>
+
+</body>
+</html>

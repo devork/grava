@@ -1,0 +1,36 @@
+{
+    "logging": {
+        "json": true,
+        "level": "debug"
+    },
+    "server": {
+        "port": 8080,
+        "cors": true
+    },
+    "cache": {
+        "type": "memory",
+        "limit": 10000
+    },
+    "fontsDir": "../fonts",
+    "postgres": "postgresql://mvt_user:9Ep7XgAMDZnYW6V@127.0.0.1/mvt?sslmode=disable",
+    "schema": "grava",
+    "sources": [
+        {
+            "prefix": "got_",
+            "name": "got",
+            "layers":[                
+                "land",
+                "islands",
+                "continents",
+                "wall",
+                "roads",
+                "rivers",
+                "political",
+                "political_point",
+                "landscape",
+                "lakes",
+                "locations"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "forest": {
+        "width":64,
+        "height":64,
+        "x":64,
+        "y":0,
+        "pixelRatio":4
+    },
+    "mountain":{
+        "width":64,
+        "height":64,
+        "x":0,
+        "y":0,
+        "pixelRatio":4
+    }
+}
