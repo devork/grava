@@ -43,6 +43,11 @@ type Db struct {
 	sources map[string][]*Layer
 }
 
+// Sources provides a list of the source data this Db instance is managing.
+func (d *Db) Sources() map[string][]*Layer {
+	return d.sources
+}
+
 // Close will release all resources associated with the database
 func (d *Db) Close() {
 	d.db.Close()
@@ -86,7 +91,7 @@ func (d *Db) readLayer(lyr *Layer, box *geo.BBox, width, height float64) (*vtile
 	by := (box.Maxy - box.Miny) * 0.05
 	log.Debugf("Reading Layer: bbox = %s, name = %s, bx = %f, by = %f", box.GoString(), lyr.Name, bx, by)
 	rows, err := d.db.Query(
-		lyr.Query,
+		lyr.query,
 		box.Minx-bx, box.Miny-by, box.Maxx+bx, box.Maxy+by, box.Srid,
 	)
 
@@ -138,10 +143,11 @@ func (d *Db) readLayer(lyr *Layer, box *geo.BBox, width, height float64) (*vtile
 
 		var feature *vtile.Tile_Feature
 
-		// TODO: read multipoint
 		switch g.(type) {
 		case *geom.Point:
 			feature = readPoint(g.(*geom.Point), box, width, height)
+		case *geom.MultiPoint:
+			feature = readMultiPoint(g.(*geom.MultiPoint), box, width, height)
 		case *geom.Polygon:
 			feature = readPolygon(g.(*geom.Polygon), box, width, height)
 		case *geom.MultiPolygon:
@@ -573,6 +579,7 @@ func NewDb(cfg *config.Config) (*Db, error) {
 	return &Db{*db, sources}, nil
 }
 
+// Queries the specified layer to obtain metadata about the table.
 func read(db *pgx.ConnPool, prefix, layer, schema string) (*Layer, error) {
 	rows, err := db.Query(`
 		select 
@@ -592,6 +599,8 @@ func read(db *pgx.ConnPool, prefix, layer, schema string) (*Layer, error) {
 
 	defer rows.Close()
 	cols := []string{}
+	attrs := []Attribute{}
+
 	var col string
 	var udt string
 	var geom string
@@ -607,8 +616,20 @@ func read(db *pgx.ConnPool, prefix, layer, schema string) (*Layer, error) {
 
 		count++
 
+		// for the types supported, we stick to those that can be easily represented in JSON/MVT
+		// could possibly add further type support which can be converted to strings? e.g. URL, IP etc.
 		switch udt {
-		case "int2", "int4", "int8", "float4", "float8", "bool", "varchar", "text":
+		case "int2", "int4", "int8":
+			attrs = append(attrs, Attribute{col, "integer"})
+			cols = append(cols, col)
+		case "float4", "float8":
+			attrs = append(attrs, Attribute{col, "float"})
+			cols = append(cols, col)
+		case "bool":
+			attrs = append(attrs, Attribute{col, "boolean"})
+			cols = append(cols, col)
+		case "varchar", "text":
+			attrs = append(attrs, Attribute{col, "string"})
 			cols = append(cols, col)
 		case "geometry":
 			geom = col
@@ -616,7 +637,7 @@ func read(db *pgx.ConnPool, prefix, layer, schema string) (*Layer, error) {
 	}
 
 	if count == 0 {
-		return nil, fmt.Errorf("no table found: name = %s", layer)
+		return nil, fmt.Errorf("no data found for layer: name = %s", layer)
 	}
 
 	err = rows.Err()
@@ -625,15 +646,34 @@ func read(db *pgx.ConnPool, prefix, layer, schema string) (*Layer, error) {
 	}
 
 	if geom == "" {
-		return nil, fmt.Errorf("no geometry column found: table = %s", layer)
+		return nil, fmt.Errorf("no geometry data found: layer = %s", layer)
 	}
 
 	if len(cols) > 0 {
 		columns = ", " + strings.Join(cols, ",")
 	}
 
+	// get the geometry type
+	var geomType string
+	err = db.QueryRow(`
+		SELECT 
+			type 
+		FROM 
+			geometry_columns 
+		WHERE f_table_schema = $1 
+		AND f_table_name = $2 
+		and f_geometry_column = $3;
+	`, schema, prefix+layer, geom).Scan(&geomType)
+
+	if err != nil {
+		return nil, fmt.Errorf("cound not determine geometry data: layer = %s, err = %s", layer, err)
+	}
+
+	attrs = append(attrs, Attribute{geom, geomType})
+
 	return &Layer{
 		layer,
+		attrs,
 		fmt.Sprintf(
 			`select 
 				ST_AsBinary(ST_Intersection(%s, st_makeenvelope($1, $2, $3, $4, $5))) as geom %s 
@@ -648,44 +688,15 @@ func read(db *pgx.ConnPool, prefix, layer, schema string) (*Layer, error) {
 	}, nil
 }
 
+// Attribute details a field value in a layer.
+type Attribute struct {
+	Name string `json:"name"`
+	Type string `json:"type"`
+}
+
 // Layer represents a database table
 type Layer struct {
-	Name  string
-	Query string
-}
-
-// logger implementation for the PGX interface - this will wrap the Logurus log and map to it's
-// levels.
-type logger struct {
-}
-
-func (l *logger) Log(level pgx.LogLevel, msg string, data map[string]interface{}) {
-	switch level {
-	case pgx.LogLevelTrace:
-	case pgx.LogLevelDebug:
-		log.WithFields(data)
-		log.Debug(msg)
-
-	case pgx.LogLevelInfo:
-		log.WithFields(data)
-		log.Info(msg)
-
-	case pgx.LogLevelWarn:
-		log.WithFields(data)
-		log.Warn(msg)
-
-	case pgx.LogLevelError:
-		log.WithFields(data)
-		log.Error(msg)
-
-	case pgx.LogLevelNone:
-		log.WithFields(data)
-		log.Info(msg)
-
-	default:
-		log.WithFields(data)
-		log.Debug(msg)
-
-	}
-
+	Name       string      `json:"name"`
+	Attributes []Attribute `json:"attributes"`
+	query      string
 }

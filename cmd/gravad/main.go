@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -97,6 +98,7 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/status", web.NewStatusHandler("gravad-service"))
+	router.HandleFunc("/sources", web.NewErrorHandler(NewSourceHandler(db)))
 	router.HandleFunc("/{name:[A-Za-z0-9_]+}/{z:[0-9]+}/{x:[0-9]+}/{y:[0-9]+}/tile.mvt", web.NewErrorHandler(NewMVTHandler(db, c)))
 	router.HandleFunc("/fonts/{font}/{file}", web.NewErrorHandler(FontHandler))
 
@@ -179,6 +181,22 @@ func FontHandler(w http.ResponseWriter, r *http.Request) *web.Error {
 
 	return nil
 
+}
+
+// NewSourceHandler creates a handler type to return Source information to clients
+func NewSourceHandler(db *data.Db) web.Handler {
+	return func(w http.ResponseWriter, r *http.Request) *web.Error {
+
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		err := json.NewEncoder(w).Encode(db.Sources())
+
+		if err != nil {
+			log.Errorf("failed to write Source data to client: error = %s", err)
+		}
+
+		return nil
+	}
 }
 
 // NewMVTHandler will create a handler function that is responsible for handling all requests for vector tiles.
