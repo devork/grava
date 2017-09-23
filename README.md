@@ -10,9 +10,12 @@ Sample screens below from:
 + [Open Map Local](docs/samples/os/opmplc/OPMPLC.md)
 + [Game of Thrones](docs/samples/got/)
 
-|||
-|--------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
-|![Open Map Places - OS HQ](docs/media/images/opmplc_sample_os.png "Open Map Places - OS HQ")|![Game of Thrones](docs/media/images/got_sample.png "Game of Thrones")|
+<table>
+<tr>
+<td><img src="docs/media/images/opmplc_sample_os.png" title="Open Map Places - OS HQ"/></td>
+<td><img src="docs/media/images/got_sample.png" tile="Game of Thrones"/></td>
+</tr>
+</table>
 
 ## Building
 
