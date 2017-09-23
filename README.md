@@ -5,9 +5,14 @@ the mapbox vector tile format.
 
 The server is very alpha, but is usable - more work is needed (especially around testing which I have woefully neglected).
 
-Sample screen below is from the [Open Map Local](docs/samples/os/opmplc/OPMPLC.md) sample:
+Sample screens below from:
 
-![Open Map Places - OS HQ](docs/media/images/opmplc_sample_os.png "Open Map Places - OS HQ")
++ [Open Map Local](docs/samples/os/opmplc/OPMPLC.md)
++ [Game of Throne]((docs/samples/got/)
+
+|||
+|--------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+|![Open Map Places - OS HQ](docs/media/images/opmplc_sample_os.png "Open Map Places - OS HQ")|![Game of Thrones](docs/media/images/got_sample.png "Game of Thrones")|
 
 ## Building
 

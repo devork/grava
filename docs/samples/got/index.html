@@ -15,7 +15,7 @@
 
 <div id='map'></div>
 <script>
-var opmplc = {
+var got = {
     "version": 8,
     "sprite": "http://localhost:8081/got/got",
     "glyphs": "http://localhost:8080/fonts/{fontstack}/{range}.pbf",
@@ -236,14 +236,13 @@ var opmplc = {
 
 var map = new mapboxgl.Map({
     container: 'map',
-    style: opmplc,
+    style: got,
     zoom: 5,
-    // os HQ
     center: [21.4, 3]
 });
 
 // enable this for some debug
-map.showTileBoundaries = true;
+map.showTileBoundaries = false;
 
 //map.addControl(new mapboxgl.Navigation());
 
