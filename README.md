@@ -8,7 +8,7 @@ The server is very alpha, but is usable - more work is needed (especially around
 Sample screens below from:
 
 + [Open Map Local](docs/samples/os/opmplc/OPMPLC.md)
-+ [Game of Throne]((docs/samples/got/)
++ [Game of Thrones](docs/samples/got/)
 
 |||
 |--------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
